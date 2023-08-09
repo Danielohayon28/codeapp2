@@ -6,11 +6,11 @@ const socketIO = require("socket.io");
 const codeRoutes = require("./routes/codeRouter");
 const cors = require("cors");
 const app = express();
-
+const path = require('path')
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, './public')));
 
 app.use("/code", codeRoutes);
 
@@ -81,10 +81,6 @@ const removeClientFromClass = (codeBlockId, socketId) => {
   }
 };
 
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'../fronted/build/index.html'));
-});
 
 
 
