@@ -10,6 +10,7 @@ const SocketProvider = ({ children }) => {
     const socketInstance = io("http://localhost:8000");
     setSocket(socketInstance);
 
+    socketInstance.on("connect",()=>console.log("connected"))
     return () => {
       socketInstance.disconnect();
     };
