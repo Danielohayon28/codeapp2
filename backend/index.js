@@ -10,11 +10,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
 app.use("/code", codeRoutes);
+
 const PORT =  process.env.PORT || 8000;
 const MAX_STUDENTS_PER_CLASS = 1;
 
-const whitelist = ["*"];
 
 const server = http.createServer(app); //http server with express app
 const io = socketIO(server, {
@@ -23,31 +25,6 @@ const io = socketIO(server, {
   },
 });
 
-// app.use((req, res, next) => {
-//   const origin = req.get("referer");
-//   const isWhitelisted = whitelist.find((w) => origin && origin.includes(w));
-//   if (isWhitelisted) {
-//     res.setHeader("Access-Control-Allow-Origin", "*");
-//     res.setHeader(
-//       "Access-Control-Allow-Methods",
-//       "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-//     );
-//     res.setHeader(
-//       "Access-Control-Allow-Headers",
-//       "X-Requested-With,Content-Type,Authorization"
-//     );
-//     res.setHeader("Access-Control-Allow-Credentials", true);
-//   }
-//   // Pass to next layer of middleware
-//   if (req.method === "OPTIONS") res.sendStatus(200);
-//   else next();
-// });
-
-// const setContext = (req, res, next) => {
-//   if (!req.context) req.context = {};
-//   next();
-// };
-// app.use(setContext);
 
 // Store the socket id of the mentor connected to each code block
 const connectedMentors = {
@@ -103,6 +80,13 @@ const removeClientFromClass = (codeBlockId, socketId) => {
     );
   }
 };
+
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'../fronted/build/index.html'));
+});
+
+
 
 // Socket.io connection event
 io.on("connection", (socket) => {
