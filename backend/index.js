@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/code", codeRoutes);
-const PORT = 8000;
+const PORT =  process.env.PORT || 8000;
 const MAX_STUDENTS_PER_CLASS = 1;
 
 const whitelist = ["*"];
@@ -155,7 +155,7 @@ io.on("connection", (socket) => {
 
 mongoose
   .connect(
-    "mongodb+srv://mika80666:iL30iQ2Y2R166ODw@cluster0.6skunbx.mongodb.net/?retryWrites=true&w=majority"
+    process.env.MONGODB_URI || "mongodb+srv://mika80666:iL30iQ2Y2R166ODw@cluster0.6skunbx.mongodb.net/?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("Connected to MongoDB successfully");
